@@ -1,3 +1,8 @@
+//
+//  Created by Weidong Yang on 12/1/13.
+//  Kinetech Arts
+//
+//
 #pragma once
 
 #include "ofMain.h"

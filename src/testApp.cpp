@@ -1,3 +1,7 @@
+//
+//  Created by Weidong Yang on 12/1/13.
+//
+//
 #include "testApp.h"
 
 using namespace ofxCv;
