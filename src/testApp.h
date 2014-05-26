@@ -14,7 +14,7 @@
 
 #define HOST "localhost"
 //#define PORT 12345
-#define PORT 8000
+#define PORT 3333
 
 class testApp : public ofBaseApp, public ofxMidiListener {
 public:

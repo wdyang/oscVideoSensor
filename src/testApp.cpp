@@ -29,7 +29,8 @@ void testApp::setup() {
         bUsePs3Eye = false;
         ofSetVerticalSync(true);
         ofSetFrameRate(120);
-        cam.setDeviceID(0);
+        int numCam=cam.listDevices().size();
+        cam.setDeviceID(numCam-1);
         cam.initGrabber(camW, camH);
     }
     
@@ -83,8 +84,8 @@ void testApp::setup() {
     
     //osc sender
 	sender.setup(HOST, PORT);
-}
 
+}
 
 void testApp::setUpNormalGrid(){
     float deltaX = camW/nCol, deltaY = camH/nRow;
@@ -218,18 +219,20 @@ void testApp::update() {
         }
 	}
     
-    for(int i=0; i<soundBlocks.size(); i++){
-        float volume = soundBlocks[i].update(mesh, stepSize, xSteps, ySteps);
-        SoundBlockState currentState = soundBlocks[i].currentState;
-        if(currentState == TriggerPlay){
-            oscLiveTriggerPlay(i, 0);
-            oscLiveSetVolume(i, volume);
-            oscRenoiseNoteOn(i, i, 60, 127);
-        }else if(currentState == On){
-            oscLiveSetVolume(i, volume);
-        }else if(currentState == TriggerStop){
-            oscLiveTriggerStop(i, 0);
-            oscRenoiseNoteOff(i, i, 60, 0);
+    if(false){ //turn off extra broadcasting
+        for(int i=0; i<soundBlocks.size(); i++){
+            float volume = soundBlocks[i].update(mesh, stepSize, xSteps, ySteps);
+            SoundBlockState currentState = soundBlocks[i].currentState;
+            if(currentState == TriggerPlay){
+                oscLiveTriggerPlay(i, 0);
+                oscLiveSetVolume(i, volume);
+                oscRenoiseNoteOn(i, i, 60, 127);
+            }else if(currentState == On){
+                oscLiveSetVolume(i, volume);
+            }else if(currentState == TriggerStop){
+                oscLiveTriggerStop(i, 0);
+                oscRenoiseNoteOff(i, i, 60, 0);
+            }
         }
     }
     
@@ -372,6 +375,8 @@ void testApp::draw() {
     reportStream<<"bLoop (cycle) is: "<<(bLoop ? "true" : "false")<<endl<<endl;
     reportStream<<"Sets (<  >):\n";
     reportStream<<"zDown "<<SoundBlock::zDown<<endl;
+    reportStream<<"gain (<Q, q>):"<<camGain<<endl;
+    reportStream<<"shutter (<W, w>):"<<camShutter<<endl;
     if(bReportMax){
         reportStream<<"Reporting max speed loaction, 'x' to toggle\n";
     }else{
